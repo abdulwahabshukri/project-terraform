@@ -5,6 +5,7 @@ terraform {
       version = "3.41.0"
     }
   }
+
 }
 
 provider "azurerm" {
@@ -18,7 +19,6 @@ resource "azurerm_resource_group" "abdulwahab-project" {
   name     = "abdulwahab-project"
   location = "West Europe"
 }
-
 resource "azurerm_virtual_network" "abdulwahab-project" {
   name                = "abdulwahab-project-network"
   address_space       = ["10.0.0.0/16"]
