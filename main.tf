@@ -19,6 +19,13 @@ resource "azurerm_resource_group" "abdulwahab-project" {
   name     = "abdulwahab-project"
   location = "West Europe"
 }
+
+resource "azurerm_ssh_public_key" "sshkey" {
+  name                = "abdulwahab"
+  location            = "West Europe"
+  resource_group_name = "abdulwahab-project"
+  public_key          = file("./sshkey.pub")
+}
 resource "azurerm_virtual_network" "abdulwahab-project" {
   name                = "abdulwahab-project-network"
   address_space       = ["10.0.0.0/16"]
@@ -59,17 +66,6 @@ resource "azurerm_network_security_group" "jenkins-vm-nsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "80"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
-  security_rule {
-    name                       = "allow_https"
-    priority                   = 300
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "443"
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
@@ -120,7 +116,7 @@ resource "azurerm_linux_virtual_machine" "jenkins-vm" {
   size                = "Standard_B1s"
   admin_username      = "azureuser"
   admin_password      = "Test123456."
-  disable_password_authentication = false
+  
   network_interface_ids = [azurerm_network_interface.abdulwahab-project-nic1.id]
   
   os_disk {
@@ -134,8 +130,13 @@ resource "azurerm_linux_virtual_machine" "jenkins-vm" {
     sku       = "20_04-lts-gen2"
     version   = "latest"
   }
-}
 
+
+  admin_ssh_key {
+    username   = "azureuser"
+    public_key = azurerm_ssh_public_key.sshkey.public_key
+  }
+}
 
 #vm2
 
@@ -166,17 +167,7 @@ resource "azurerm_network_security_group" "server-vm-nsg" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
-  security_rule {
-    name                       = "allow_https"
-    priority                   = 300
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "443"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
+  
   security_rule {
     name                       = "all_out"
     priority                   = 400
@@ -223,7 +214,7 @@ resource "azurerm_linux_virtual_machine" "server-vm" {
   size                = "Standard_B2s"
   admin_username      = "azureuser"
   admin_password      = "Test123456."
-  disable_password_authentication = false
+  
   network_interface_ids = [azurerm_network_interface.abdulwahab-project-nic2.id]
 
   os_disk {
@@ -236,6 +227,11 @@ resource "azurerm_linux_virtual_machine" "server-vm" {
     offer     = "0001-com-ubuntu-server-focal"
     sku       = "20_04-lts-gen2"
     version   = "latest"
+  }
+
+  admin_ssh_key {
+    username   = "azureuser"
+    public_key = azurerm_ssh_public_key.sshkey.public_key
   }
 }
 
