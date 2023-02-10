@@ -41,6 +41,9 @@ jobs:
         tf_actions_subcommand: 'init'
         tf_actions_working_dir: "."
 
+    - name: AZ login
+      run: az login -auto-approve
+
     - name: 'Terraform Validate'
       uses: hashicorp/terraform-github-actions@master
       with:
