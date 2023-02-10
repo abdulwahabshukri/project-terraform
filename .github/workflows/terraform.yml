@@ -10,10 +10,10 @@ jobs:
   terraform:
     name: 'Terraform'
     env:
-      ARM_CLIENT_ID: $client_id
+      ARM_CLIENT_ID: ${{ secrets.TF_ARM_CLIENT_ID }}
       ARM_CLIENT_SECRET: ${{ secrets.TF_ARM_CLIENT_SECRET }}
-      ARM_SUBSCRIPTION_ID: $subscription_id
-      ARM_TENANT_ID: $tenant_id
+      ARM_SUBSCRIPTION_ID: ${{ secrets.TF_ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.TF_ARM_TENANT_ID }}
     runs-on: ubuntu-latest
     environment: production
 
