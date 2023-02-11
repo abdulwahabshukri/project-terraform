@@ -98,7 +98,7 @@ resource "azurerm_public_ip" "jenkins-vm-public_ip" {
   name                = "jenkins-vm-public_ip"
   resource_group_name = "abdulwahab-project"
   location            = "West Europe"
-  allocation_method   = "Dynamic"
+  allocation_method   = "Static"
 }
 
 resource "azurerm_network_interface" "abdulwahab-project-nic1" {
